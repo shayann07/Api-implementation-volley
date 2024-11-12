@@ -33,8 +33,9 @@ class MainActivityLogin : AppCompatActivity() {
             val enteredPass = binding.passwordEditText.text.toString()
 
             if (enteredPhone.isNotEmpty() && enteredPass.isNotEmpty()) {
+                val modelUser = ModelUser("", "", enteredPhone, enteredPass, "")
                 lifecycleScope.launch {
-                    loginUser(enteredPhone, enteredPass)
+                    loginUser(modelUser)
                 }
             } else {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
@@ -46,32 +47,38 @@ class MainActivityLogin : AppCompatActivity() {
         }
     }
 
-    private suspend fun loginUser(phone: String, password: String) {
+    private suspend fun loginUser(user: ModelUser) {
         withContext(Dispatchers.IO) {
             try {
                 val jsonBody = JSONObject().apply {
-                    put("phone_number", phone)
-                    put("password", password)
+                    put("phone_number", user.phone)
+                    put("password", user.password)
                 }
 
-                val jsonObjectRequest = object : JsonObjectRequest(
-                    Method.POST, apiUrl, jsonBody,
-                    Response.Listener { response ->
+                val jsonObjectRequest = object :
+                    JsonObjectRequest(Method.POST, apiUrl, jsonBody, Response.Listener { response ->
                         if (response.optBoolean("success", false) && response.has("data")) {
                             val token = response.getJSONObject("data").optString("token", "")
                             saveToken(token)
-                            Toast.makeText(this@MainActivityLogin, "Successful Login", Toast.LENGTH_SHORT).show()
-                            startActivity(Intent(this@MainActivityLogin, MainActivityHome::class.java))
+                            Toast.makeText(
+                                this@MainActivityLogin, "Successful Login", Toast.LENGTH_SHORT
+                            ).show()
+                            startActivity(
+                                Intent(
+                                    this@MainActivityLogin, MainActivityHome::class.java
+                                )
+                            )
                             finish()
                         } else {
                             val message = response.optString("message", "Login failed.")
-                            Toast.makeText(this@MainActivityLogin, message, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@MainActivityLogin, message, Toast.LENGTH_SHORT)
+                                .show()
                         }
-                    },
-                    Response.ErrorListener { error ->
-                        Toast.makeText(this@MainActivityLogin, "Error: ${error.message}", Toast.LENGTH_SHORT).show()
-                    }
-                ) {
+                    }, Response.ErrorListener { error ->
+                        Toast.makeText(
+                            this@MainActivityLogin, "Error: ${error.message}", Toast.LENGTH_SHORT
+                        ).show()
+                    }) {
                     override fun getHeaders() = mapOf("Content-Type" to "application/json")
                 }
 
@@ -79,7 +86,9 @@ class MainActivityLogin : AppCompatActivity() {
 
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivityLogin, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MainActivityLogin, "Error: ${e.message}", Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
