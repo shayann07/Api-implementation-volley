@@ -1,0 +1,24 @@
+<resources>
+    <!-- Base application theme -->
+    <style name="Base.Theme.FirstApi" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+
+    </style>
+
+    <!-- Define the default app theme -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <item name="actionOverflowMenuStyle">@style/OverflowMenu</item>
+    </style>
+
+    <style name="OverflowMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="overlapAnchor">false</item>
+        <item name="android:overlapAnchor">false</item>
+    </style>
+
+    <style name="SearchViewHintStyle">
+        <item name="android:textColorHint">@color/white</item>
+    </style>
+
+    <!-- This theme is used for the splash screen and the main app theme -->
+    <style name="Theme.FirstApi" parent="Base.Theme.FirstApi" />
+</resources>
