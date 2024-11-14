@@ -32,6 +32,12 @@ class MainActivitySignUp : AppCompatActivity() {
                 val pass = passwordEditText.text.toString()
                 val cPass = confirmPasswordEditText.text.toString()
 
+                if (firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty() || pass.isEmpty() || cPass.isEmpty())
+                {
+                    Toast.makeText(this@MainActivitySignUp, "All fields are required!", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
                 if (pass == cPass) {
                     // ModelUser object
                     val modelUser = ModelUser(firstName, lastName, phone, pass, cPass)
